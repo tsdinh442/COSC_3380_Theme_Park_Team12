@@ -47,10 +47,14 @@ const express   = require("express"),
 
     // set port, listen for requests
     const PORT = process.env.PORT || 8080;
-    
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}.`);
+    });
 
 
-const mysql = require('mysql')
+    ///// code by Tung
+
+//const mysql = require('mysql')
 const morgan = require('morgan')
 //const bodyParser = require('body-parser')
 const { Prohairesis} = require('prohairesis')
@@ -326,13 +330,4 @@ app.post('/show_maintenance', (req, res, next) => {
     console.error('Error querying the database users');
     });
 });
-
-
-
-    
-
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}.`);
-});
-//app.listen(port);
 
