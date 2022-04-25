@@ -7,6 +7,19 @@
     <title>Document</title>
     <link rel='stylesheet' href='/public/stylesheet.css' />
 
+    <script>
+
+
+    //var rainouts = '<%= reportsByYear[0].year %>'; 
+    var rainouts = '<%= reportsByYear[0].year %>';  
+    console.log(rainouts)
+    document.addEventListener('DOMContentLoaded', () => {  
+        if (rainouts != '') {
+            document.querySelector('#yearTable').style = "display: block";
+        }        
+    })
+        
+    </script>
    
 </head>
 <body>
@@ -24,25 +37,52 @@
         </div>
 
         <div class="content">
-            <div class="_title">RAINOUT REPORT</div>
-            <table id="table">
-                <thead>
-                    <th>ID</th>
-                    <th>Date</th>
-                    <th>Affected Area</th>
-                    <th>Area ID</th>
-                </thead>
-                <tbody>
-                    <% for(let i =0;i < rows.length; i++){ %>
+            <div class="_75" style="text-align: center; font-size: 18px; font-weight: bold;">RAINOUT REPORT</div>
+            <div class='_25'><br><br><br></div>
+            <div class="_25" style = "display: none" id="yearTable">
+                <table  >
+                    <thead>
                         <tr>
-                            <td><%= rows[i].Rainout_ID %></td>
-                            <td><%= rows[i].Date_ %></td>
-                            <td><%= rows[i].Area_name %></td>
-                            <td><%= rows[i].Area_ID %></td>
+                            <td colspan="3"><%= reportsByYear[0].year %></td>
+                        </tr>
+                        <th></th>
+                        <th>Month</th>
+                        <th>Counts</th>
+    
+                    </thead>
+                    <tbody>
+                        <% for(let i =0;i < reportsByYear.length; i++){ %>
+                            <tr>
+                                <td><%= i + 1  %></td>
+                                <td><%= reportsByYear[i].month %></td>
+                                <td><%= reportsByYear[i].count %></td>
                             </tr>
-                    <% } %>                      
-                </tbody>
-            </table>  
+                        <% } %>                      
+                    </tbody>
+                </table> 
+            </div>
+            <div class="_75">
+                <table id="table">
+                    <thead>
+                        <th></th>
+                        <th>Date</th>
+                        <th>Affected area</th>
+                        <th>Area ID</th>
+    
+                    </thead>
+                    <tbody>
+                        <% for(let i =0;i < rows.length; i++){ %>
+                            <tr>
+                                <td><%= i + 1 %></td>
+                                <td><%= rows[i].date %></td>
+                                <td><%= rows[i].Area_name %></td>
+                                <td><%= rows[i].Area_ID %></td>
+                                </tr>
+                        <% } %>                      
+                    </tbody>
+                </table> 
+            </div>
+             
             <!-- <div style="text-align: center; font-size: 18px">Total: </div>    -->
         </div>
 

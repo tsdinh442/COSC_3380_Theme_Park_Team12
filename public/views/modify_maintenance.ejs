@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="public/stylesheet.css">
+
+    <script>
+
+        var x = '<%= ride_IDs %>';
+        var xx = '<%= ride_names %>';
+        var y = '<%= on_going_maintenance %>'; 
+        var yy = '<%= on_going_maintenance_names %>';
+        //console.log(xx);
+        //console.log(yy);
+        document.addEventListener('DOMContentLoaded', () => {        
+            //By default, submit button is disable
+            document.querySelector('#btn').disabled = true;
+            document.querySelector('#btn').style = "cursor: not-allowed";
+            document.querySelector('#rollerCoaster_ID').onkeyup = () => {
+                if (document.querySelector('#rollerCoaster_ID').value.length > 0) {
+                    document.querySelector('#btn').disabled = false;
+                    document.querySelector('#btn').style = "cursor: pointer";
+                    document.querySelector('#rollerCoasterName').disabled = true;
+                }
+                else {
+                    document.querySelector('#btn').disabled = true;
+                    document.querySelector('#btn').style = "cursor: not-allowed";
+                    document.querySelector('#rollerCoasterName').disabled = false;
+                }                
+            } 
+
+            document.querySelector('#rollerCoasterName').onchange = () => {
+
+                var ddl = document.getElementById("rollerCoasterName");
+                var selectedValue = ddl.options[ddl.selectedIndex].value;
+
+                if (selectedValue != "") {
+                    document.querySelector('#btn').disabled = false;
+                    document.querySelector('#btn').style = "cursor: pointer";
+                    document.querySelector('#rollerCoaster_ID').disabled = true;
+                }
+
+                else {
+                    document.querySelector('#btn').disabled = true;
+                    document.querySelector('#btn').style = "cursor: not-allowed";
+                    document.querySelector('#rollerCoaster_ID').disabled = false;
+                    }  
+
+                }
+
+                      
+        })
+        
+        
+        function checkValidation() {
+                //document.querySelector('form').onsubmit = () => {
+                //const input_ID = "hi ";
+
+                const inp = document.getElementById("rollerCoaster_ID").value;
+                var temp = document.getElementById("rollerCoasterName");
+                var ride_name = temp.options[temp.selectedIndex].value;
+                console.log(ride_name);
+                /*if (inp != "34") {
+                    alert("NOt a valid ID");
+                    return false;
+                }
+                return true;*/
+                
+                //console.log(input_ID);                
+                //var valid_ID = false;
+                if (!x.includes(inp) || !xx.includes(ride_name) ) {
+                    alert("Not a valid ID");                    
+                    return false;
+                }  
+                if (!y.includes(inp) || !yy.includes(ride_name) ) {
+                    alert("No active maintenance for this roller coaster");
+                    return false;
+                }  
+                 
+                return true;           
+        }    
+            
+                //}
+                
+            //} 
+    </script>
+
+</head>
+<body>
+    <div class="container">
+
+        <div class="header">
+            <%- include ('templates/header.ejs') %>
+        </div>
+        <div class="header-r">
+            <%- include ('templates/header_r.ejs') %>
+        </div>
+
+        <div class="navigation" style="border-right: 1px solid #000;">
+            <%- include ('templates/navigation.ejs') %>
+        </div>
+
+        <div class="content">
+            <div class="_75" style="text-align: center; font-size: 18px; font-weight: bold;">UPDATE MAINTENANCE</div>
+         
+            <form name="updateMaintenance" id="updateMaintenance" onsubmit="return checkValidation()" action="/update_maintenance" method="POST">
+                <div style="font-size: 12px;">
+                    <div class="_50">                        
+                        Roller coaster's name 
+                        <br>
+                        <select id="rollerCoasterName" name="rollerCoasterName">                        
+                            <option value="">
+                                <option value="Mountain Rider Coaster">Mountain Rider Coaster
+                                <option value="GhostRider">GhostRider
+                                <option value="Smoky Mountain Coaster">Smoky Mountain Coaster
+                                </option>
+                        </select>                      
+                    </div>
+                    <div class="_25">
+                        Roler coaster's ID 
+                        <br>
+                        <input id="rollerCoaster_ID" type="text" min="0" max="10000" placeholder="0000" name="rollerCoaster_ID">                        
+                        
+                    </div>
+                    
+                    <div class="_25">
+                        
+                        <br><br><br>
+                        <br><br><br>
+                                        
+                    </div>
+                    <section id="hidden" style="display: none">
+                        <div class="_30">
+                        
+                            Employee's first name <br>
+                            <input type="text" placeholder="" name="firstName" style="width: 70%"> <br><br>
+                            Starting date<br>                        
+                            <input type="date" placeholder="YYYY-MM-DD" name="startingDate" style="width: 70%">                                       
+                        </div>
+                        
+                        <div class="_30">
+                            
+                            Employee's last name <br>
+                            <input type="text" placeholder="" name="lastName" style="width: 70%"> <br><br>
+                            Completion date<br>                        
+                            <input type="date" placeholder="YYYY-MM-DD" name="completionDate" style="width: 70%">                       
+                        </div>
+    
+                        <div class="_30" style="width: 125px;">
+                            Status 
+                            <br>
+                            <select name="rideStatus" required>                      
+                                <option value="On-going">On-going
+                                <option value="Completed">Completed
+                                </option>
+                            </select>                      
+                        </div>
+                    
+    
+                        <div class="_25">
+                            
+                            <br><br><br>
+                            <br><br><br>
+                            
+                                                 
+                        </div>
+                    </section>
+                    
+                    
+                    <div class="_75">
+                        <input id="btn" type="submit" value="SEARCH">
+                    </div>                                        
+                </div>
+                                  
+            </form>           
+        </div>
+
+        <div class="footer" style="font-size: 12px;">Team 12 - COSC 3080 - Tue/Thu Class</div>
+    </div>
+</body>
+</html>

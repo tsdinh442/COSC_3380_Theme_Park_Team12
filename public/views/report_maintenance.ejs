@@ -7,6 +7,74 @@
     <title>Document</title>
     <link rel="stylesheet" href="public/stylesheet.css">
 
+    <script>
+
+        var emp_ID = '<%= employee_IDs %>';
+        //console.log(x);
+        document.addEventListener('DOMContentLoaded', () => {        
+            //By default, submit button is disable
+            document.querySelector('#btn').disabled = true;
+            document.querySelector('#btn').style = "cursor: not-allowed";
+            document.querySelector('#rollerCoasterName').onchange = () => { 
+
+                var ddl = document.getElementById("rollerCoasterName");
+                var selectedValue = ddl.options[ddl.selectedIndex].value;
+
+                if (selectedValue != '') {
+                    document.querySelector('#btn').disabled = false;
+                    document.querySelector('#btn').style = "cursor: pointer";
+                }
+
+                else {
+                    document.querySelector('#btn').disabled = true;
+                    document.querySelector('#btn').style = "cursor: not-allowed";
+                    }  
+
+            }  
+
+            document.querySelector('#rideStatus').onchange = () => { 
+
+                var ddl = document.getElementById("rideStatus");
+                var selectedValue = ddl.options[ddl.selectedIndex].value;
+
+                if (selectedValue == "Completed") {
+                    document.querySelector('#completionDate').required = true;
+
+                }
+                if (selectedValue == "On-going") {
+                    document.querySelector('#completionDate').required = false;
+
+                }
+            }
+        })
+
+        function checkValidation() {
+            //document.querySelector('form').onsubmit = () => {
+            //const input_ID = "hi ";
+            
+            const inp = document.getElementById("employeeID").value;
+            //var temp = document.getElementById("rollerCoasterName");
+            //var ride_name = temp.options[temp.selectedIndex].value;
+            //console.log(ride_name);
+            /*if (inp != "34") {
+                alert("NOt a valid ID");
+                return false;
+            }
+            return true;*/
+            
+            //console.log(inp);  
+            //console.log(emp_ID);              
+            //var valid_ID = false;
+            if (!emp_ID.includes(inp)) {
+                alert("Not a valid ID");                    
+                return false;
+            }  
+                
+            return true;           
+        } 
+
+    </script>
+
 </head>
 <body>
     <div class="container">
@@ -23,63 +91,64 @@
         </div>
 
         <div class="content">
-            <div class="_75" style="text-align: center; font-size: 18px; font-weight: bold;">ADD A NEW MAINTENANCE</div>
-         
-            <form action="/maintenance" method="POST">
+            <div class="_50" style="text-align: center; font-size: 18px; font-weight: bold;">ADD A NEW MAINTENANCE</div>
+            <div class="_50">
+                        
+                <br><br>
+           
+                
+                                     
+            </div>
+            <form id="addMaintenance" onsubmit="return checkValidation()" action="/maintenance" method="POST">
                 <div style="font-size: 12px;">
                     <div class="_50">                        
                         Roller coaster's name 
                         <br>
-                        <select name="rollerCoasterName">                        
-                            <option >
-                                <option value="Mountain Rider Coaster">Mountain Rider Coaster
-                                <option value="GhostRider">GhostRider
-                                <option value="Smoky Mountain Coaster">Smoky Mountain Coaster
-                                </option>
+                        <select id="rollerCoasterName" name="rollerCoasterName" required>                        
+                            <option value=''>
+                            <option value="Mountain Rider Coaster">Mountain Rider Coaster
+                            <option value="GhostRider">GhostRider
+                            <option value="Smoky Mountain Coaster">Smoky Mountain Coaster
+                            </option>
                         </select>
-                        <br><br><br>
-                        Employee's full name <br>
-                        <input type="text" placeholder="Enter last name" name="fullName">                       
+                                     
                     </div>
                     <div class="_25">
-                        Roler coaster's ID 
-                        <br>
-                        <input type="text" min="0" max="10000" placeholder="0000" name="rollerCoaster_ID">
-                        <br><br><br>
-                        Employee's ID<br>
-                        <input type="text" min="0" max="10000" placeholder="0000" name="employee_ID">
+                        
                         
                     </div>
                     
                     <div class="_25">
                         
                         <br><br><br>
-                        <br><br><br>
-                        <br><br><br>
                         <br>
+                        
                                              
                     </div>
                     <div class="_30">
+                        Employee's ID<br>
+                        <input type="text" id="employeeID" min="0" max="10000" placeholder="0000" name="employee_ID" style="width: 69%" required>
+                        <br><br><br>
                         Starting date<br>                        
-                        <input type="date" placeholder="YYYY-MM-DD" name="startingDate" style="width: 70%">                                       
+                        <input type="date" placeholder="YYYY-MM-DD" name="startingDate" style="width: 69%" required>                                       
                     </div>
                     
                     <div class="_30">
-                        Completion date<br>                        
-                        <input type="date" placeholder="YYYY-MM-DD" name="completionDate" style="width: 70%">                       
-                    </div>
-
-                    <!-- <div class="_30" style="width: 125px;">
                         Status 
                         <br>
-                        <select> 
-                            <option >                       
+                        <select name="rideStatus" id="rideStatus" required>  
+                            <option>                 
                             <option value="On-going">On-going
                             <option value="Completed">Completed
                             </option>
-                        </select>                      
+                        </select>
+                        <br><br><br>    
+                        Completion date<br>                        
+                        <input type="date" placeholder="YYYY-MM-DD" id="completionDate" name="completionDate" style="width: 69%">                       
                     </div>
-                -->
+
+               
+                
 
                     <div class="_25">
                         
@@ -90,8 +159,9 @@
                                              
                     </div>
                     
-                    <div class="_75">
-                        <input type="submit">
+                    <div class="_50">
+                        <br><br>
+                        <input id="btn" type="submit">
                     </div>                                        
                 </div>
                                   

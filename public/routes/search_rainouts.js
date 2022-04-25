@@ -47,15 +47,7 @@ handleDisconnect();
 
 /* GET home page */
 router.get('/', (req, res, next) => {
-    connection.query('SELECT Rainout_ID, Date_, Area_name, rainouts.Area_ID  FROM rainouts, areas WHERE rainouts.Area_ID = areas.Area_ID;', (error, rows) => {
-        if(error) throw error;
-    
-        if(!error) {
-            console.log(rows);
-            res.render('../views/search_rainouts', {rows})
-        
-        }
-    })
+    res.render('search_rainouts', {})
 });
 
 module.exports = router;

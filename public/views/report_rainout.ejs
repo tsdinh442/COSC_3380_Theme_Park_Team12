@@ -7,7 +7,37 @@
     <title>Document</title>
     <link rel="stylesheet" href="public/stylesheet.css">
 
-    
+    <script>
+
+        
+        document.addEventListener('DOMContentLoaded', () => {        
+            //By default, submit button is disable
+            document.querySelector('#btn').disabled = true;
+            document.querySelector('#btn').style = "cursor: not-allowed";
+            document.querySelector('#areaName').onchange = () => { 
+
+                var ddl = document.getElementById("areaName");
+                var selectedValue = ddl.options[ddl.selectedIndex].value;
+
+                if (selectedValue != "") {
+                    document.querySelector('#btn').disabled = false;
+                    document.querySelector('#btn').style = "cursor: pointer";
+                    document.querySelector('#areaID').disabled = true;
+
+                }
+
+                else {
+                    document.querySelector('#btn').disabled = true;
+                    document.querySelector('#btn').style = "cursor: not-allowed";
+                    document.querySelector('#areaID').disabled = false;
+                    }  
+
+            }  
+
+
+        })
+
+    </script>
 </head>
 <body>
     <div class="container">
@@ -42,10 +72,10 @@
                         </select>                                                                 
                     </div>
 
-                    <div class="_25">                        
+                    <div class="_25" style="display: None">                        
                         Area's ID
                         <br>
-                        <input id="small" type="text" min="0" max="100" placeholder="Enter an ID" name="areaID" style='width: 70%'>                                                               
+                        <input id="areaID" type="text" min="0" max="100" placeholder="Enter an ID" name="areaID" style='width: 70%'>                                                               
                     </div>
                     
                     <div class="_25">
@@ -56,7 +86,7 @@
                     </div>
                     <div class="_25">
                         <br>
-                        <button type="submit" name="rainoutBtn">Submit</button>
+                        <button id="btn" type="submit" name="rainoutBtn">Submit</button>
                     </div>
                                                             
                 </div>                                  

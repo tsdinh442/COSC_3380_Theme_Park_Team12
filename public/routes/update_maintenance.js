@@ -45,23 +45,35 @@ function handleDisconnect() {
 
 handleDisconnect();
 
-/* GET rainout report page */
-router.get('/', (req, res, next) => {
-    connection.query("SELECT user_id FROM users WHERE user_type = 'Employee';", (error, employeeID) => {
+/* GET home page */
+router.post('/', (req, res, next) => {
+    const body = req.body;
+    connection.query("SELECT DATE_FORMAT(`Date_Started`,'%m-%d-%Y') AS date, Rides_coaster_ID, rides_coasters.Name, Maintenance_ID FROM maintenances, rides_coasters WHERE status_ = 'On-going' AND Rides_coaster_ID = Ride_coaster_ID AND (maintenances.Rides_coaster_ID = ? OR rides_coasters.Name = ?);", [body.rollerCoaster_ID, body.rollerCoasterName], (error, rows) => {
         if(error) throw error;
-        
+    
         if(!error) {
-            console.log(employeeID);
-            // list of all employee IDs  
-            var employee_IDs = [];
             
-            for (var i = 0; i < employeeID.length; i++) {
-                employee_IDs.push(employeeID[i].user_id);
-                }  
-                //console.log(employee_IDs)
-                res.render('report_maintenance', { employee_IDs })
-            }                                      
-        })    
+            //console.log(ride_IDs) 
+            /*if  ( rows.length == 0 ) {  
+                const rows = "NONE"
+                connection.query("SELECT Ride_coaster_ID FROM rides_coasters;", (error, rideID) => {
+                    if(error) throw error;
+                
+                    if(!error) {    
+                        const ride_IDs = []
+                        for (var i = 0; i < rideID.length; i++) {
+                            ride_IDs.push(rideID[i].Ride_coaster_ID)
+                            }               
+                        res.render('modify_maintenance', { ride_IDs, rows});
+                    }
+                })
+            }*/
+            //else {
+                res.render('update_maintenance', { rows })
+            //}                                 
+        }
+    })
 });
 
 module.exports = router;
+

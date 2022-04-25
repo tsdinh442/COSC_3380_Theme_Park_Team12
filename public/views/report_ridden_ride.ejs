@@ -6,6 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="public/stylesheet.css">
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {        
+            //By default, submit button is disable
+            document.querySelector('#btn').disabled = true;
+            document.querySelector('#btn').style = "cursor: not-allowed";
+            document.querySelector('#rideName').onchange = () => { 
+
+                var ddl = document.getElementById("rideName");
+                var selectedValue = ddl.options[ddl.selectedIndex].value;
+
+                if (selectedValue != "") {
+                    document.querySelector('#btn').disabled = false;
+                    document.querySelector('#btn').style = "cursor: pointer";
+                }
+
+                else {
+                    document.querySelector('#btn').disabled = true;
+                    document.querySelector('#btn').style = "cursor: not-allowed";
+                    }  
+
+            }  
+        })
+    </script>
    
 </head>
 <body>
@@ -23,56 +47,54 @@
         </div>
 
         <div class="content">
-            <div class="_75" style="text-align: center; font-size: 18px; font-weight: bold;">RIDE REPORT</div>
+            <div class="_75" style="text-align: center; font-size: 18px; font-weight: bold;">ADD A RIDE</div>
          
             <form action="/ridden_ride" method="POST">
                 <div style="font-size: 12px;">
                     <div class="_50">                        
                         Roller coaster's name 
                         <br>
-                        <select name="rideName">                        
+                        <select id="rideName" name="rideName">                        
                             <option >
                                 <option value="Mountain Rider Coaster">Mountain Rider Coaster
                                 <option value="GhostRider">GhostRider
                                 <option value="Smoky Mountain Coaster">Smoky Mountain Coaster
                                 </option>
                         </select>
-                        <br><br><br>
-                        On-site staff's full name <br>
-                        <input type="text" placeholder="Enter full name" name="employeeName">                       
+                        <!--<br><br><br>
+                         On-site staff's full name <br>
+                        <input type="text" placeholder="Enter full name" name="employeeName">   -->                     
                     </div>
                     <div class="_25">
-                        Roller coaster's ID 
+                        Number of passengers 
                         <br>
-                        <input type="text" min="0" max="10000" placeholder="0000" name="rideID">
-                        <br><br><br>
-                        On-site staff's ID<br>
-                        <input type="text" min="0" max="10000" placeholder="Enter employee's ID" name="employeeID">
+                        <input type="number" min="0" max="200" placeholder="" name="numberOfPassengers" style="width: 30%;" required>
+                        <!-- <br><br><br>
+                         On-site staff's ID<br>
+                        <input type="text" min="0" max="10000" placeholder="Enter employee's ID" name="employeeID"> -->
                         
                     </div>
                     
                     <div class="_25">
                         
-                        <br><br><br>
-                        <br><br><br>
+                       
+                        
                         <br><br><br>
                         <br>
                                              
                     </div>
                     <div class="_30">
                         Date<br>                        
-                        <input type="date" placeholder="" name="rideDate" style="width: 70%">                                       
+                        <input type="date" placeholder="" name="rideDate" style="width: 69%" required>                                       
                     </div>
                     
                     <div class="_30">
                         Time<br>                        
-                        <input type="time" step=1 placeholder="" name="rideTime" style="width: 70%">                       
+                        <input type="time" step=1 placeholder="" name="rideTime" style="width: 69%" required disabled>                       
                     </div>
 
-                    <div class="_30">
-                        Number of passengers 
-                        <br>
-                        <input type="number" min="0" placeholder="" name="numberOfPassengers" style="width: 30%;">
+                    <div class="_30" style="display: none">
+                        
                     </div>
 
                     <!--
@@ -92,7 +114,7 @@
                     </div>
                     
                     <div class="_75">
-                        <input type="submit">
+                        <input id="btn" type="submit">
                     </div>                                        
                 </div>                                  
             </form>           

@@ -32,7 +32,7 @@
     "mysql2": "^2.3.3",
     "path": "^0.12.7",
     "prohairesis": "^1.2.5",
-    "sequelize": "^6.18.0"
+    "sequelize": "^6.19.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"

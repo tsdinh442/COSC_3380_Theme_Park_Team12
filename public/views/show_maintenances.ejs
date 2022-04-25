@@ -27,20 +27,22 @@
             <div class="_title">MAINTENANCE REPORT</div>
             <table id="table">
                 <thead>
-                    <th>ID</th>
+                    <th></th>
                     <th>Roller Coaster's Name</th>
                     <th>Roller Coaster's ID</th>
                     <th>Date Started</th>
                     <th>Date Completed</th>
+                    <th>Status</th>
                 </thead>
                 <tbody>
                     <% for(let i =0;i < rows.length; i++){ %>
                         <tr>
-                            <td><%= rows[i].Maintenance_ID %></td>
+                            <td><%= i + 1 %></td>
                             <td><%= rows[i].Name %></td>
                             <td><%= rows[i].Rides_coaster_ID %></td>
-                            <td><%= rows[i].Date_Started %></td>
-                            <td><%= rows[i].Date_Completed %></td>
+                            <td><%= rows[i].date_started %></td>
+                            <td><%= rows[i].date_completed %></td>
+                            <td><%= rows[i].status_ %></td>
                             </tr>
                     <% } %>                      
                 </tbody>

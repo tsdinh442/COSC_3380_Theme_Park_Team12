@@ -83,27 +83,40 @@ const database = new Prohairesis(mySQLstring);
 var search_rainouts = require('./public/routes/search_rainouts');
 var search_maintenance = require('./public/routes/search_maintenance');
 
-var ride_freq = require('./public/routes/show_ride_frequency');
-var rainouts = require('./public/routes/show_rainouts');
+var modify_maintenance = require('./public/routes/modify_maintenance');
+var update_maintenance = require('./public/routes/update_maintenance');
+
+
+//var ride_freq = require('./public/routes/show_ride_frequency');
+var show_rainouts = require('./public/routes/show_rainouts');
+var show_maintenances = require('./public/routes/show_maintenances');
+
 var rainout_report = require('./public/routes/report_rainout');
 var maintenance_report = require('./public/routes/report_maintenance');
 var ridden_ride_report = require('./public/routes/report_ridden_ride');
 var admission_report = require('./public/routes/report_admission');
 
 var success = require('./public/routes/success');
+//const { NOW } = require("sequelize/types");
 
 
 app.set("views", path.join(__dirname, "public/views"))
 app.set('view engine', 'ejs')
 
-
+// search
 app.use('/search_rainouts', search_rainouts);
 app.use('/search_maintenance', search_maintenance);
 
+// modify
+app.use('/modify_maintenance', modify_maintenance);
+app.use('/update_maintenance', update_maintenance);
 
-app.use('/ride_frequency', ride_freq);
-app.use('/rainouts', rainouts);
+// view report
+//app.use('/ride_frequency', ride_freq);
+app.use('/show_rainouts', show_rainouts);
+app.use('/show_maintenances', show_maintenances);
 
+// add report
 app.use('/report_rainout', rainout_report);
 app.use('/report_maintenance', maintenance_report);
 app.use('/report_ridden_ride', ridden_ride_report);
@@ -123,47 +136,119 @@ app
     
 app.post('/rainout', async (req, res) => {
     const body = req.body;
-    await database.execute(`
-        INSERT INTO rainouts (
-            Date_, 
-            Area_Id
-        ) VALUES (
-            @date, 
-            @area_id
-        )
+    database.query(`
+        SELECT Area_ID
+        FROM areas
+        WHERE Area_Name = @areaName`, {
+            areaName: body.areaName
+        })
+    .then((area_ID) => {
+        //console.log(area_ID);
+        database.query(`
+            INSERT INTO rainouts (
+                Date_, 
+                Area_Id
+            ) VALUES (
+                @date, 
+                @area_id
+            )
+        `, {
+            area_id: area_ID[0].Area_ID,
+            date: body.rainoutDate,        
+        });
+    })
+        
+    
+    
+    
+
+    /* await database.query(`
+        UPDATE rides_coasters 
+        SET ride_status = "Closed", closed_reason = "rainout"
+        WHERE Area_ID = @area_id;
     `, {
-        area_id: body.areaID,
-        date: body.rainoutDate,        
-    });
+        area_id: body.areaID
+    })*/
 
     res.redirect('/success');
 })
+
+
 
 app.post('/maintenance', async (req, res) => {
     
     const body = req.body;
-    await database.execute(`
-        INSERT INTO maintenance (
-	        Worker_ID,
-	        Date_Started,
-	        Date_Completed,
-	        Rides_Coaster_ID
-        ) VALUES (
-	        @employee_ID,
-	        @startingDate,
-	        @completionDate,
-	        @rollerCoaster_ID
-        )
-    `, {
-        employee_ID: body.employee_ID,
-        startingDate: body.startingDate, 
-        completionDate: body.completionDate, 
-        rollerCoaster_ID: body.rollerCoaster_ID,        
-    });
+    //console.log(body);
+
+    if (body.rideStatus == "On-going") {
+
+        database.query(`
+            SELECT Ride_coaster_ID
+            FROM rides_coasters
+            WHERE Name = @rideName`, {
+                rideName: body.rollerCoasterName
+        })
+        .then((ride_ID) => {
+            //console.log(ride_ID)
+            database.query(`
+            INSERT INTO maintenances (
+                Worker_ID,
+                Date_Started,
+                Date_Completed,
+                Rides_Coaster_ID,
+                status_
+            ) VALUES (           
+                @employee_ID,
+                @startingDate,
+                @completionDate,
+                @rollerCoaster_ID,
+                @status )
+            `, {
+                //maintenance_ID: '84',
+                employee_ID: body.employee_ID,
+                startingDate: body.startingDate, 
+                completionDate: body.completionDate, 
+                rollerCoaster_ID: ride_ID[0].Ride_coaster_ID,
+                status: body.rideStatus        
+            })        
+        })
+        
+        await database.query(`
+            UPDATE rides_coasters 
+            SET ride_status = "Closed", closed_reason = "maintenance"
+            WHERE Ride_Coaster_ID = @rollerCoaster_ID;
+        `, {
+            rollerCoaster_ID: body.rollerCoaster_ID
+        });
+    }
+
+    if (body.rideStatus == "Completed") {
+
+        console.log(body);
+
+        await database.query(`
+            UPDATE maintenances
+            SET Date_Completed = NOW(), status_ = @status
+            WHERE Maintenance_ID = @maintenanceID;
+        `, {
+            status: body.rideStatus,
+            maintenanceID: body.maintenanceID
+        });
+
+        await database.query(`
+            UPDATE rides_coasters 
+            SET ride_status = "Active", closed_reason = ""
+            WHERE Ride_Coaster_ID = (SELECT Rides_coaster_ID FROM maintenances WHERE Maintenance_ID = @maintenanceID);
+        `, {
+            maintenanceID: body.maintenanceID
+        });
+    }
+
+
     res.redirect('/success');
 })
 
-app.post('/admision', async (req, res) => {
+/*app.post('/admision', async (req, res) => {
     
     const body = req.body;
     await database.execute(`
@@ -201,34 +286,42 @@ app.post('/admision', async (req, res) => {
         onsite_purchase: body.onsiteSold        
     });
     res.redirect('/success');
-})
+}) */
 
 app.post('/ridden_ride', async (req, res) => {
     
     const body = req.body;
-    await database.execute(`
-        INSERT INTO rides (
-	        roller_coaster_ID,
-	        Date_,
-	        Time_,
-	        Number_of_passenger
-
-        ) VALUES (
-	        @rideID,
-	        @rideDate,
-	        @rideTime,
-	        @NumOfPassenger
-        )
-    `, {
-        rideID: body.rideID,
-        rideDate: body.rideDate,
-        rideTime: body.rideTime,
-        NumOfPassenger: body.numberOfPassengers,      
-    });
+    console.log(body);
+    database.query(`
+            SELECT Ride_coaster_ID
+            FROM rides_coasters
+            WHERE Name = @rideName`, {
+                rideName: body.rideName
+        })
+        .then((ride_ID) => {
+            database.query(`
+                INSERT INTO rides (
+                    Ride_coaster_ID,
+                    Date_,
+                    Number_of_passenger
+                ) VALUES (
+                    @rideID,
+                    @rideDate,
+                    @NumOfPassenger
+                )
+            `, {
+                rideID: ride_ID[0].Ride_coaster_ID,
+                rideDate: body.rideDate,
+                NumOfPassenger: body.numberOfPassengers     
+            });
+        })
+        .catch((error) => {
+            console.error('Error querying the database users');
+            });
     res.redirect('/success');
 })
 
-app.post('/show_rainouts', (req, res, next) => {
+/* app.get('/show_rainouts', (req, res, next) => {
     const body = req.body;
     database.query(`
     SELECT
@@ -274,60 +367,45 @@ app.post('/show_rainouts', (req, res, next) => {
     .catch((error) => {
     console.error('Error querying the database users');
     });
-});
+}); */
 
 
-app.post('/show_maintenance', (req, res, next) => {
+/* app.post('/show_maintenance', (req, res, next) => {
     const body = req.body;
     //console.log(body);
     database.query(`
-    SELECT
-        Maintenance_ID, Date_Started, Date_Completed, Rides_coaster_ID, rides_coasters.Name
-    FROM
-        maintenances, rides_coasters
-    WHERE
-        maintenances.Rides_coaster_ID = rides_coasters.Ride_coaster_ID
-    AND (
-        Name = @rideName
-        OR 
-        Date_Started = @dateStarted
-        OR
-        Date_completed = @dateCompleted
-        OR
-        YEAR(Date_Started) = @year
-        OR (
-            MONTH(Date_Started) = @month 
-            AND
-            YEAR(Date_Started) = @year
-        )
-        OR (
-            Name = @rideName
-            AND 
-            Date_Started = @dateStarted
-        )
-        OR (
-            Name = @rideName
-            AND 
-            MONTH(Date_Started) = @month 
-            AND
-            YEAR(Date_Started) = @year
-        )
-    )
-    `,{
-        rideName: body.rollerCoasterName,
-        dateStarted: body.startingDate.concat(' 00:00:00'),
-        dateCompleted: body.completionDate.concat(' 00:00:00'),
+            SELECT Ride_coaster_ID
+            FROM rides_coasters
+            WHERE Name = @rideName`, {
+                rideName: body.rollerCoasterName
+        })
+        .then((ride_ID) => {
+            console.log(ride_ID)
+            database.query(`
+            SELECT
+                Date_Started, Date_Completed, Rides_coaster_ID, rides_coasters.Name, status_
+            FROM
+                maintenances, rides_coasters
+            WHERE
+                maintenances.Rides_coaster_ID = @rideID
+                AND
+                maintenances.Rides_coaster_ID = rides_coasters.Ride_coaster_ID
+                                    
+            `,{
+                rideName: body.rollerCoasterName,
+                rideID: ride_ID[0].Ride_coaster_ID,
+                //month: body.searchMonth,
+                //year: body.searchYear
 
-        month: body.searchMonth,
-        year: body.searchYear
-
-      })
-    .then((rows) => {
-        console.log(rows);
-        res.render('show_maintenance', {rows})
-    })
-    .catch((error) => {
-    console.error('Error querying the database users');
-    });
-});
+            }) 
+            
+            .then((rows) => {
+                console.log(rows);
+                res.render('show_maintenance', {rows})
+            })
+            .catch((error) => {
+            console.error('Error querying the database users');
+            });
+        })    
+}); */
 

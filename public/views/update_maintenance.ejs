@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="public/stylesheet.css">
+    
+</head>
+<body>
+    <div class="container">
+
+        <div class="header">
+            <%- include ('templates/header.ejs') %>
+        </div>
+        <div class="header-r">
+            <%- include ('templates/header_r.ejs') %>
+        </div>
+
+        <div class="navigation" style="border-right: 1px solid #000;">
+            <%- include ('templates/navigation.ejs') %>
+        </div>
+
+        <div class="content">
+            <div class="_75" style="text-align: center; font-size: 18px; font-weight: bold;">UPDATE MAINTENANCE</div>
+            <form action="/maintenance" method="POST">
+                <div style="font-size: 12px;">
+                    <div class="_50">
+                        Roller coaster's name                        
+                        <br>
+                        <select name="rollerCoasterName" disabled>                        
+                            <option >
+                                <%= rows[0].Name %>                    
+                            </option>
+                        </select>                      
+                    </div>
+                    <div class="_25">
+                        Roler coaster's ID 
+                        <br>
+                        <input type="text" min="0" max="10000" placeholder=<%= rows[0].Rides_coaster_ID %> name="rollerCoaster_ID" disabled style="; border: 1px solid rgb(168, 168, 168)">                        
+                        
+                    </div>
+                    
+                    <div class="_25">
+                        
+                        <br><br><br>
+                        <br>
+                        
+                                             
+                    </div>
+                    
+                        <div class="_30">
+                            <!-- Employee's first name <br>
+                            <input type="text" placeholder="" name="firstName" style="width: 70%"> <br><br>-->
+                            Starting date<br>                        
+                            <input type="text" placeholder=<%= rows[0].date %> name="startingDate" style="width: 70%; border: 1px solid rgb(168, 168, 168) " disabled>                                       
+                        </div>
+                        
+                        <div class="_30">
+                            
+                            <!-- Employee's last name <br>
+                            <input type="text" placeholder="" name="lastName" style="width: 70%"> <br><br>-->
+                            Completion date<br>                        
+                            <input type="date" min=<%= rows[0].date %> name="completionDate" style="width: 70%; border: 1px solid rgb(168, 168, 168);" required>                       
+                        </div>
+    
+                        <div class="_30" style="width: 125px;">
+                            Status 
+                            <br>
+                            <select name="rideStatus" required style="width: 100%; border: 2px solid black ;" >                      
+                                <!-- <option value="On-going">On-going -->
+                                <option value="Completed">Completed
+                                </option>
+                            </select>                      
+                        </div>
+                    
+    
+                        <div class="_25" >
+                            
+                            <br><br><br>
+                            <br><br><br>
+                            <br><br><br>
+                            <br>
+
+                            <select name="maintenanceID" style="display: none;">                        
+                                <option >
+                                    <%= rows[0].Maintenance_ID %>                    
+                                </option>
+                            </select> 
+                                                 
+                        </div>
+                    
+                    
+                    
+                    <div class="_75">
+                        <input id="btn" type="submit" value="UPDATE">
+                    </div>                                        
+                </div>
+                                  
+            </form>           
+        </div>
+
+        <div class="footer" style="font-size: 12px;">Team 12 - COSC 3080 - Tue/Thu Class</div>
+    </div>
+</body>
+</html>

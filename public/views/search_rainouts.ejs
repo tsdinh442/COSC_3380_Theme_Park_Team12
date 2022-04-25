@@ -7,7 +7,56 @@
     <title>Document</title>
     <link rel="stylesheet" href="public/stylesheet.css">
 
+    <script>
+
+        
+        document.addEventListener('DOMContentLoaded', () => {        
+            //By default, submit button is disable
+            document.querySelector('#btn').disabled = true;
+            document.querySelector('#btn').style = "cursor: not-allowed";
+            document.querySelector('#areaName').onchange = () => { 
+
+                var ddl = document.getElementById("areaName");
+                var selectedValue = ddl.options[ddl.selectedIndex].value;
+
+                if (selectedValue != "") {
+                    document.querySelector('#btn').disabled = false;
+                    document.querySelector('#btn').style = "cursor: pointer";
+                }
+
+                else {
+                    document.querySelector('#btn').disabled = true;
+                    document.querySelector('#btn').style = "cursor: not-allowed";
+                    }  
+
+            }  
+
+            document.querySelector('#searchMonth').onchange = () => { 
+
+                var ddl = document.getElementById("searchMonth");
+                var selectedValue = ddl.options[ddl.selectedIndex].value;
+
+                if (selectedValue != "") {
+                    document.querySelector('#searchYear').required = true;
+                    document.querySelector('#btn').disabled = false;
+                    document.querySelector('#btn').style = "cursor: pointer";
+
+                }
+
+                else {
+                    document.querySelector('#searchYear').required = false;
+                    document.querySelector('#btn').disabled = false;
+                    document.querySelector('#btn').style = "cursor: pointer";
+                    }  
+
+                }  
+
+        })
+
+    </script>
+
     
+
 </head>
 <body>
     <div class="container">
@@ -26,18 +75,18 @@
         <div class="content">
             <div style="text-align: left; font-size: 18px; font-weight: bold; margin-left: 10px">SEARCH RAINOUT</div>
             <br><br><br>
-            <div style="text-align: left; font-size: 12px; margin-left: 10px">Search by</div>          
+            <div style="text-align: left; font-size: 12px; margin-left: 10px">Search by (choose 'all' areas and a specific year for that year report)</div>          
             <form action="/show_rainouts" method="POST">
                 <div style="font-size: 12px;">
                     <div class="_30">
-                        By Date                        
+                        <!-- By Date                        
                         <br>
                         <input type="date" placeholder="YYYY-MM-DD" name="searchDate" style="width: 70%">  
-                        <br><br><br>
-                        By Area
+                        <br><br><br> -->
+                        By Area <a style="color: red;">*</a>
                         <br>
-                        <select name="areaName" id="areaName">                        
-                            <option>
+                        <select name="areaName" id="areaName" required>   
+                            <option>              
                             <option value="all">All
                             <option value="Magic Kingdom">Magic Kingdom
                             <option value="Animal Kingdom">Animal Kingdom
@@ -47,13 +96,13 @@
                             </option>
                         </select> 
                         <br><br><br><br>
-                        <input type="submit" style="left: 0; margin-left: 0;">
+                        <input id="btn" type="submit" style="left: 0; margin-left: 0;">
                     </div>
 
                     <div class="_30">                        
-                        By Month
+                        By Month (must choose year)
                         <br>
-                        <select name="searchMonth">                        
+                        <select id="searchMonth" name="searchMonth">                        
                             <option >
                             <option value="01">Januray
                             <option value="02">Feburuary
@@ -74,7 +123,7 @@
                     <div class="_30">
                         By Year
                         <br>                     
-                        <select name="searchYear">                        
+                        <select id="searchYear" name="searchYear">                        
                             <option >
                             <option value="2022">2022
                             <option value="2021">2021
