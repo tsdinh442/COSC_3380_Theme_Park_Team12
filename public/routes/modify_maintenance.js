@@ -10,16 +10,17 @@ const mysql = require('mysql');
     user: 'b052c9e9d7c49d',
     password: '64931555',
     database: 'heroku_0fab399232beb7b'
-})*/
+})
 
 
 var db_config = {
     host: 'us-cdbr-east-05.cleardb.net',
-      user: 'b052c9e9d7c49d',
-      password: '64931555',
-      database: 'heroku_0fab399232beb7b'
-  };
+    user: 'b052c9e9d7c49d',
+    password: '64931555',
+    database: 'heroku_0fab399232beb7b'
+  }; */
   
+const db_config = require('dotenv').config();
 var connection;
 
 function handleDisconnect() {

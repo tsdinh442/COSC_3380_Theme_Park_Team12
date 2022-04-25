@@ -10,7 +10,7 @@ const mysql = require('mysql');
     user: 'b052c9e9d7c49d',
     password: '64931555',
     database: 'heroku_0fab399232beb7b'
-})*/
+})
 
 
 var db_config = {
@@ -18,8 +18,8 @@ var db_config = {
       user: 'b052c9e9d7c49d',
       password: '64931555',
       database: 'heroku_0fab399232beb7b'
-  };
-  
+  }; */
+const db_config = require('dotenv').config();  
 var connection;
 
 function handleDisconnect() {
