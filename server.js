@@ -9,8 +9,7 @@ const express   = require("express"),
 const mysql = require('mysql')
 const morgan = require('morgan')
 
-
-//require('dotenv').config();
+require('dotenv').config();
 
 const dbConfig = require("./app/config/db.config.js");
 
