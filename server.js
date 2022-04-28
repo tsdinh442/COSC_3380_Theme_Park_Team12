@@ -4,14 +4,27 @@ const express   = require("express"),
     path        = require('path'),
     app         = express();
 
+    require('dotenv').config();
 
 /////////////// by Tung ///////////////////////
 const mysql = require('mysql')
 const morgan = require('morgan')
 
-require('dotenv').config();
+
 
 const dbConfig = require("./app/config/db.config.js");
+/*
+const connection = mysql.createConnection({
+    host: dbConfig.HOST,
+    user: dbConfig.USER,
+    password: dbConfig.PASSWORD,
+    database: dbConfig.DB,
+});
+
+function connectDb() {    
+    connection.on('error', connectDb()); // probably worth adding timeout / throttle / etc
+}
+
 
 const connection = mysql.createConnection({
     host: dbConfig.HOST,
@@ -20,16 +33,23 @@ const connection = mysql.createConnection({
     database: dbConfig.DB,
 });
 
+*/
+
 function handleDisconnect() {
-    //connection = mysql.createConnection(db_config); 
+    connection = mysql.createConnection({
+        host: dbConfig.HOST,
+        user: dbConfig.USER,
+        password: dbConfig.PASSWORD,
+        database: dbConfig.DB,
+    }); 
                                              
-/*
+
     connection.connect(function(err) {             
         if(err) {                                   
             console.log('error when connecting to db:', err);
             setTimeout(handleDisconnect, 2000); 
             }                                    
-        });  */                                
+        });                                 
                               
     connection.on('error', function(err) {
         console.log('db error', err);
@@ -42,6 +62,7 @@ function handleDisconnect() {
 }
 
 handleDisconnect(); 
+
 
 ////////////////////////////
 
