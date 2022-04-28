@@ -19,7 +19,7 @@ var db_config = {
 */
 
 
-handleDisconnect();
+
 
 /* GET home page */
 router.get('/', (req, res, next) => {
