@@ -1,8 +1,8 @@
 import authHeader from '../helper/auth-header.js';
 let token =  localStorage.getItem("ThemeParkaccessToken");
 const axiosWithToken = (token) => axios.create({
-    //baseURL: "https://theme-park-3380.herokuapp.com/",
-    baseURL: "http://localhost:8080/",
+    baseURL: "https://team12-theme-park.herokuapp.com/",
+    //baseURL: "http://localhost:8080/",
     headers:  authHeader(token)
 });
 export default  {
